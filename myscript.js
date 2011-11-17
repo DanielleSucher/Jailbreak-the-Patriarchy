@@ -728,6 +728,15 @@ var map = {
     "ACTRESSES" : "ACTORS"
 };
 
+if ( mother_short == 'mum' ) {
+    map['mum'] = 'dad';
+    map['Mum'] = 'Dad';
+    map['MUM'] = 'DAD';
+    map['mums'] = 'dads';
+    map['Mums'] = 'Dads';
+    map['MUMS'] = 'DADS';
+}
+
 function genderswap(text){
     text = text.replace(searchFor, function(match) {
         var replacement;
