@@ -1,5 +1,18 @@
 var searchFor = /\bshe\b|\bhe\b|\bms\b|\bmrs\b|\bmr\b|woman|\bman\b|women|\bmen\b|\bfemale|\bmale\b|\bmales\b|\bgirl\b|\bboy\b|\bgirls\b|\bboys\b|\bgirly\b|\bboyish\b|\bgirlhood\b|\bboyhood\b|\bgirlfriend|\bboyfriend|\bwife|\bhusband\b|\bwives\b|\bhusbands\b|daughter|\bson\b|\bsons\b|\bsister|\bbrother|\bmother|grandmother|godmother|stepmother|father|\baunt\b|\buncle\b|\baunts\b|\buncles\b|\bniece\b|\bnephew\b|\bnieces\b|\bnephews\b|\bherself\b|\bhimself\b|\blady|\bladies\b|\bgentlemen\b|\bgentleman\b|\bmom\b|\bmum\b|\bdad\b|\bmoms\b|\bmums\b|\bdads\b|mommy|mummy|daddy|mommies|mummies|daddies|ladiez|\bmenz\b|\bmanly\b|\bmanliness\b|\bmanhood\b|\bmankind\b|\bfemini|\bmasculi|\bguy\b|\bguys\b|\bdude\b|\bdudes\b|\bdudely\b|\bmaternity\b|\bpaternity\b|\bmaternal\b|\bpaternal\b|\bmatroniz|\bpatroniz|klansman|airman|airmen|alderman|aldermen|anchorman|anchormen|assemblyman|assemblymen|bogeyman|bogeymen|bondsman|bondsmen|businessman|businessmen|cameraman|cameramen|caveman|cavemen|chairman|clergyman|congressman|congressmen|councilman|councilmen|countryman|countrymen|craftsman|craftsmen|doorman|doormen|fireman|firemen|fisherman|fishermen|foreman|foremen|freshman|freshmen|garbageman|garbagemen|handyman|handymen|hangman|henchman|henchmen|journeyman|kinsman|kinsmen|layman|laymen|madman|madmen|mailman|mailmen|marksman|middleman|middlemen|milkman|milkmen|nobleman|noblemen|ombudsman|policeman|policemen|postman|postmen|repairman|repairmen|salesman|salesmen|sandman|serviceman|servicemen|showman|snowman|spaceman|spacemen|spokesman|spokesmen|sportsman|statesman|superman|supermen|unman\b|watchman|watchmen|weatherman|weathermen|workman|workmen|hero\b|heroes|heroine\b|heroines|\bmaleness|whitemaleness|misogyn|misandr|dudebro|laydeez|d00dz|\bfem\b|\bradfem\b|\bwidow\b|\bwidower\b|\bfiance\b|\bfiancee\b|\bpapa\b|\bmama\b|\bpoppa\b|\bmomma\b|\bgod\b|\bgoddess\b|\bbride|\bgroom|\bgodliness\b|\bgodhead\b|\bgodhood\b|\bgodly\b|\bgal\b|\bsir\b|\bma\'am\b|\bgrandson|\bpatriar|\bmatriar|\bantifeminist|stepbrother|stepsister|\blord\b|\blords\b|\bking\b|\bkings\b|\bqueen\b|\bqueens\b|\bprince\b|\bprinces\b|\bprincess\b|\bprincesses\b|\bemperor\b|\bemperors\b|\bempress\b|\bempresses\b|\bgirlier\b|\bgirliest\b|\bdudelier\b|\bdudeliest\b|\bactor\b|\bactors\b|\bactress\b|\bactresses/gi;
 
+// if the user is using en_US locale, then use "mom", if en_GB, use "mum"
+// default of 'mom'
+var mother_short = 'mom';
+if ( window.navigator.language == 'en-US' ) {
+    mother_short = 'mom';
+} else if ( window.navigator.language == 'en-GB' ) {
+    mother_short = 'mum';
+}
+
+function capitalise(word) {
+    return word.substring(0, 1).toUpperCase() + word.substring(1);
+}
+
 
 var map = {
     "she" : "he",
@@ -54,16 +67,16 @@ var map = {
     "gentleman" : "lady",
     "mom" : "dad",
     "mum" : "dad",
-    "dad" : "mom",
+    "dad" : mother_short,
     "moms" : "dads",
     "mums" : "dads",
     "dads" : "moms",
     "mommy" : "daddy",
     "mummy" : "daddy",
-    "daddy" : "mommy",
+    "daddy" : mother_short+"my",
     "mommies" : "daddies",
     "mummies" : "daddies",
-    "daddies" : "mommies",
+    "daddies" : mother_short+"mies",
     "ladiez" : "menz",
     "menz" : "ladiez",
     "manly" : "womanly",
@@ -292,16 +305,16 @@ var map = {
     "Gentleman" : "Lady",
     "Mom" : "Dad",
     "Mum" : "Dad",
-    "Dad" : "Mom",
+    "Dad" : capitalise(mother_short),
     "Moms" : "Dads",
     "Mums" : "Dads",
-    "Dads" : "Moms",
+    "Dads" : capitalise(mother_short+"s"),
     "Mommy" : "Daddy",
     "Mummy" : "Daddy",
-    "Daddy" : "Mommy",
+    "Daddy" : capitalise(mother_short+"my"),
     "Mommies" : "Daddies",
     "Mummies" : "Daddies",
-    "Daddies" : "Mommies",
+    "Daddies" : capitalise(mother_short+"mies"),
     "Ladiez" : "Menz",
     "Menz" : "Ladiez",
     "Manly" : "Womanly",
@@ -530,16 +543,16 @@ var map = {
     "GENTLEMAN" : "LADY",
     "MOM" : "DAD",
     "MUM" : "DAD",
-    "DAD" : "MOM",
+    "DAD" : mother_short.toUpperCase(),
     "MOMS" : "DADS",
     "MUMS" : "DADS",
-    "DADS" : "MOMS",
+    "DADS" : (mother_short+"s").toUpperCase(),
     "MOMMY" : "DADDY",
     "MUMMY" : "DADDY",
-    "DADDY" : "MOMMY",
+    "DADDY" : (mother_short+"my").toUpperCase(),
     "MOMMIES" : "DADDIES",
     "MUMMIES" : "DADDIES",
-    "DADDIES" : "MOMMIES",
+    "DADDIES" : (mother_short+"mies").toUpperCase(),
     "LADIEZ" : "MENZ",
     "MENZ" : "LADIEZ",
     "MANLY" : "WOMANLY",
