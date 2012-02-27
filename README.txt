@@ -12,9 +12,9 @@ Known issues:
 
 - Some folks say it doesn't work on reddit, others say that it does. It works on reddit for me. More testing and possibly tweaking here.
 
-- Ported by others to Safari (http://code.lardcave.net/entries/2011/12/22/182251/) and Firefox (http://userscripts.org/scripts/show/125685) already, hooray!
+- Ported by others to Safari (http://code.lardcave.net/entries/2011/12/22/182251/) and Firefox (http://userscripts.org/scripts/show/125685) and as gender-neutral version (https://chrome.google.com/webstore/detail/mmdlclbfhplmbjfefngjbicmelpbbdnh) already, hooray!
 
-- If someone else wants to get around to making the gender-neutral version a few folks have asked for or anything else that plays off this, please feel free.
+- If anyone else wants to create anything else that plays off this, please feel free. I'd appreciate a nod of credit, but that's about it. 
 
 ***
 
