@@ -1,18 +1,27 @@
+function updateBadge(paused){
+    if (paused){
+        chrome.browserAction.setBadgeText({text:"OFF"});
+    } else {
+        chrome.browserAction.setBadgeText({text:""});
+    }
+}
+
 chrome.browserAction.onClicked.addListener(
     function(tab){
         if (localStorage.getItem('paused')=="yes"){ 
            localStorage.removeItem('paused');
-           chrome.browserAction. setBadgeText({text:""});
+           updateBadge(false);
         } else {
            localStorage.setItem('paused',"yes");
-           chrome.browserAction. setBadgeText({text:"OFF"});
+           updateBadge(true);
         }
         chrome.tabs.update(tab.id, {url: tab.url});
 });
-
 
 chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse) {
         if (request.checkPaused == "hello")
             sendResponse({maybePaused: localStorage.getItem('paused')});
   });
+
+updateBadge(localStorage.getItem('paused')=="yes");
