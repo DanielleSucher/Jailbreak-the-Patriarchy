@@ -1,6 +1,6 @@
 {
   "name": "Jailbreak the Patriarchy",
-  "version": "1.0.0.9",
+  "version": "1.0.0.10",
   "description": "Genderswaps your view of the web.",
   "background_page": "background.html",
   "icons": { "16": "icon16.png",
