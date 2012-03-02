@@ -776,6 +776,12 @@ function jailbreak(node){
 chrome.extension.sendRequest({checkPaused: "hello"}, function(response) {
     if (response.maybePaused!="yes") {
     jailbreak(document.body);
+    var titles = document.getElementsByTagName("title");
+    for( tag in titles ) {
+        try {
+            jailbreak(titles[tag]);
+        } catch(err) {}
+    }
 
     document.body.addEventListener('DOMNodeInserted', function(event) {
         jailbreak(event.target);
