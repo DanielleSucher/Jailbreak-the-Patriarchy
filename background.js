@@ -30,7 +30,7 @@ chrome.extension.onRequest.addListener(
         }
 });
 
-var ONE_DAY = 1000 * 60// * 60 * 24;
+var ONE_DAY = 1000 * 60 * 60 * 24;
 //returns the current time in millis since epoch
 function now() {
   return +new Date();
