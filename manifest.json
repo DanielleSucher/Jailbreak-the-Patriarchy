@@ -1,6 +1,6 @@
 {
   "name": "Jailbreak the Patriarchy",
-  "version": "1.0.0.10",
+  "version": "1.0.0.11",
   "description": "Genderswaps your view of the web.",
   "background_page": "background.html",
   "icons": { "16": "icon16.png",
@@ -10,7 +10,7 @@
     "tabs", "http://*/*", "https://*/*"
   ],
   "browser_action": {
-    "default_icon": "icon19.png", 
+    "default_icon": "icon19.png",
     "default_title": "Toggle Patriarchy"
   },
   "content_scripts": [
@@ -20,5 +20,6 @@
       "run_at" : "document_end"
     }
   ],
-  "content_security_policy": "default-src 'none'; script-src 'self'"
+  "content_security_policy": "default-src 'none'; script-src 'self'",
+  "options_page": "options.html"
 }
