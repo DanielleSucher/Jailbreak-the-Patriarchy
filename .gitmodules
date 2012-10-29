@@ -1,0 +1,3 @@
+[submodule "jspos"]
+	path = jspos
+	url = git@github.com:damonwang/jspos.git
