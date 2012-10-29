@@ -317,8 +317,8 @@ chrome.extension.onRequest.addListener(
             sendResponse({value: ""});
             return;
         } else regexOfReplacements.lastIndex = 0;
-        var tokens = lexer.lex(request.text);
-        var tagged = tagger.tag(tokens);
+        var lexed = lexer.lex(request.text);
+        var tagged = tagger.tag(lexed.tokens);
         var replaced = [];
         var didReplace = false;
         for (var i = tagged.length - 1; i >= 0; --i) {
