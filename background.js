@@ -330,15 +330,12 @@ chrome.extension.onRequest.addListener(
             } else if (word.toLowerCase() === "her") {
                 var replacement = tag === "PP$" ? "his" : "him";
                 replacement = replace_case_sensitive(word, replacement);
-                // console.log(replacement) 
                 didReplace = true;
             } else replacement = word;
             replaced[i] = replacement;
         }
         if (didReplace) {
-            // console.log(node.textContent);
             sendResponse({value: replaced.join(" ")});
-            // console.log(node.textContent);
         } else sendResponse({value: ""});
     });
 

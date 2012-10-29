@@ -16,13 +16,11 @@ function jailbreak(node){
     while(treeWalker.nextNode()) {
         var node = treeWalker.currentNode;
         var request = {name: "swapGenders", text: node.textContent};
-        console.log(request);
         chrome.extension.sendRequest(request, updateNode(node));
     }
 }
 
 chrome.extension.sendRequest({name: "isPaused"}, function(response) {
-    console.log(response.value);
     if (!response.value) {
         jailbreak(document.body);
         document.body.addEventListener('DOMNodeInserted', function(event) {
