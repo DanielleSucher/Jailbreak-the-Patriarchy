@@ -1,9 +1,7 @@
-var searchFor = /\bshe\b|\bhe\b|\bms\b|\bmrs\b|\bmr\b|woman|\bman\b|women|\bmen\b|\bfemale|\bmale\b|\bmales\b|\bgirl\b|\bboy\b|\bgirls\b|\bboys\b|\bgirly\b|\bboyish\b|\bgirlhood\b|\bboyhood\b|\bgirlfriend|\bboyfriend|\bwife|\bhusband\b|\bwives\b|\bhusbands\b|daughter|\bson\b|\bsons\b|\bsister|\bbrother|\bmother|grandmother|godmother|stepmother|father|\baunt\b|\buncle\b|\baunts\b|\buncles\b|\bniece\b|\bnephew\b|\bnieces\b|\bnephews\b|\bherself\b|\bhimself\b|\blady|\bladies\b|\bgentlemen\b|\bgentleman\b|\bmom\b|\bdad\b|\bmoms\b|\bdads\b|mommy|daddy|mommies|daddies|ladiez|\bmenz\b|\bmanly\b|\bmanliness\b|\bmanhood\b|\bmankind\b|\bfemini|\bmasculi|\bguy\b|\bguys\b|\bdude\b|\bdudes\b|\bdudely\b|\bmaternity\b|\bpaternity\b|\bmaternal\b|\bpaternal\b|\bmatroniz|\bpatroniz|klansman|airman|airmen|alderman|aldermen|anchorman|anchormen|assemblyman|assemblymen|bogeyman|bogeymen|bondsman|bondsmen|businessman|businessmen|cameraman|cameramen|caveman|cavemen|chairman|clergyman|congressman|congressmen|councilman|councilmen|countryman|countrymen|craftsman|craftsmen|doorman|doormen|fireman|firemen|fisherman|fishermen|foreman|foremen|freshman|freshmen|garbageman|garbagemen|handyman|handymen|hangman|henchman|henchmen|journeyman|kinsman|kinsmen|layman|laymen|madman|madmen|mailman|mailmen|marksman|middleman|middlemen|milkman|milkmen|nobleman|noblemen|ombudsman|policeman|policemen|postman|postmen|repairman|repairmen|salesman|salesmen|sandman|serviceman|servicemen|showman|snowman|spaceman|spacemen|spokesman|spokesmen|sportsman|statesman|superman|supermen|unman\b|watchman|watchmen|weatherman|weathermen|workman|workmen|hero\b|heroes|heroine\b|heroines|\bmaleness|whitemaleness|misogyn|misandr|dudebro|laydeez|d00dz|\bfem\b|\bradfem\b|\bwidow\b|\bwidower\b|\bfiance\b|\bfiancee\b|\bpapa\b|\bmama\b|\bpoppa\b|\bmomma\b|\bgod\b|\bgoddess\b|\bbride|\bgroom|\bgodliness\b|\bgodhead\b|\bgodhood\b|\bgodly\b|\bgal\b|\bsir\b|\bma\'am\b|\bgrandson|\bpatriar|\bmatriar|\bantifeminist|stepbrother|stepsister|\blord\b|\blords\b|\bking\b|\bkings\b|\bqueen\b|\bqueens\b|\bpriest\b|\bpriests\b|\bpriestess\b|\bpriestesses\b|\bprince\b|\bprinces\b|\bprincess\b|\bprincesses\b|\bemperor\b|\bemperors\b|\bempress\b|\bempresses\b|\bgirlier\b|\bgirliest\b|\bdudelier\b|\bdudeliest\b|\bactor\b|\bactors\b|\bactress\b|\bactresses|\bwaiter|\bwaitress|\bgrandma|\bgrandpa|\bgramps\b|\bbloke/gi;
-
-
 var map = {
     "she" : "he",
     "he" : "she",
+    "him" : "her",
     "ms" : "mr",
     "mrs" : "mr",
     "mr" : "ms",
@@ -251,6 +249,7 @@ var map = {
     "bloke" : "girl",
     "She" : "He",
     "He" : "She",
+    "Him" : "Her",
     "Ms" : "Mr",
     "Mrs" : "Mr",
     "Mr" : "Ms",
@@ -495,6 +494,7 @@ var map = {
     "Bloke" : "Girl",
     "SHE" : "HE",
     "HE" : "SHE",
+    "HIM" : "HER",
     "MS" : "MR",
     "MRS" : "MR",
     "MR" : "MS",
@@ -739,18 +739,47 @@ var map = {
     "BLOKE" : "GIRL"
 };
 
-function genderswap(text){
-    text = text.replace(searchFor, function(match) {
-        var replacement;
-        replacement = map[match];
-        return replacement ? replacement : match;
-    });
-
-    return (text);
+// preserves three capitalization styles: uncapitalized, Capitalized,
+// and ALLCAPS.  CamelCase is not supported, and uncapitalize is sort
+// of an "identity style"---i.e., the replacement is return in exactly
+// the same case as it was passed in.
+function replace_case_sensitive(word, replacement) {
+    var upper = word.toUpperCase();
+    if (upper === word) {
+        return replacement.toUpperCase;
+    } else if (upper.charAt(0) === word.charAt(0)) {
+        return replacement.charAt(0).toUpperCase() + replacement.substr(1);
+    } else return replacement;
 }
 
+function genderswap(node){
+    chrome.extension.sendRequest({text: node.textContent}, function(response) {
+        var replaced = [];
+        var didReplace = false;
+        var tagged = response.tagged;
+        for (var i = tagged.length - 1; i >= 0; --i) {
+            var word = tagged[i][0]; 
+            var tag = tagged[i][1];
+            var replacement = map[word];
+            if (replacement) {
+                didReplace = true;
+            } else if (word.toLowerCase === "her") {
+                var replacement = tag === "PP$" ? "his" : "him";
+                replacement = replace_case_sensitive(word, replacement);
+                didReplace = true;
+            } else replacement = word;
+            replaced[i] = replacement;
+        }
+        if (didReplace) {
+            console.log(node.textContent);
+            node.textContent = replaced.join(" ");
+            console.log(node.textContent);
+        }
+    });
+}
 
 function jailbreak(node){
+    console.log("foo!");
     var treeWalker = document.createTreeWalker(  
         node,  
         NodeFilter.SHOW_TEXT,  
@@ -758,38 +787,9 @@ function jailbreak(node){
         false  
     ); 
     while(treeWalker.nextNode()) {
-       treeWalker.currentNode.textContent = genderswap(treeWalker.currentNode.textContent);
-       treeWalker.currentNode.textContent = treeWalker.currentNode.textContent
-.replace(/\bher\b(?=\.|\,|\;|\:|\]|\}|\)|\?)/g,"fdgsghjkhgfdsfghjhim")
-.replace(/\bher\sher\b/g,"fdgsghjkhgfdsfghjhim fdgsghjkhgfdsfghjhis")
-.replace(/\bher\b(?=\s(?=a\b|an\b|the\b|some\b|any\b|0|1|2|3|4|5|6|7|8|9|one|two|three|thirt|four|five|fift|six|seven|eight|nine|ten|eleven|twelve|twenty))/g, "fdgsghjkhgfdsfghjhim")
-.replace(/\bher\b(?=\s(?=aboard|about|above|across|after|against|along|amid|among|around|as|at|before|behind|below|beneath|beside|besides|between|beyond|but\b|by\b|concerning|considering|despite|down|during|except|excepting|excluding|following|for|from|in\b|inside|into|like|minus|of\b|off\b|often|on\b|onto|opposite|outside|over|past|per\b|plus|regarding|since\b|than\b|through|to\b|toward|towards|under\b|underneath|unlike|until|up\b|upon|versus|via\b|with\b|within|without|not|and\b|feel\b))/g,"fdgsghjkhgfdsfghjhim")
-.replace(/\bit\sher\sall\b/g,"it fdgsghjkhgfdsfghjhis all")
-.replace(/\bher\sall\b/g,"fdgsghjkhgfdsfghjhim all")
-.replace(/\bher\b/g,"fdgsghjkhgfdsfghjhis")
-.replace(/\bhers\b/g,"fdgsghjkhgfdsfghjhis")
-.replace(/\bHer\b(?=\.|\,|\;|\:|\]|\}|\)|\?)/g,"fdgsghjkhgfdsfghjHim")
-.replace(/\bHer\sher\b/g,"fdgsghjkhgfdsfghjHim fdgsghjkhgfdsfghjHis")
-.replace(/\bHer\b(?=\s(?=a\b|an\b|the\b|some\b|any\b|many\b|0|1|2|3|4|5|6|7|8|9|one|two|three|thirt|four|five|fift|six|seven|eight|nine|ten|eleven|twelve|twenty))/g, "fdgsghjkhgfdsfghjHim")
-.replace(/\bHer\b(?=\s(?=aboard|about|above|across|after|against|along|amid|among|around|as|at|before|behind|below|beneath|beside|besides|between|beyond|but\b|by\b|concerning|considering|despite|down|during|except|excepting|excluding|following|for|from|in\b|inside|into|like|minus|of\b|off\b|often|on\b|onto|opposite|outside|over|past|per\b|plus|regarding|since\b|than\b|through|to\b|toward|towards|under\b|underneath|unlike|until|up\b|upon|versus|via\b|with\b|within|without|not|and\b|feel\b))/g,"fdgsghjkhgfdsfghjHim")
-.replace(/\bit\sHer\sall\b/g,"it fdgsghjkhgfdsfghjHis all")
-.replace(/\bHer\sall\b/g,"fdgsghjkhgfdsfghjHim all")
-.replace(/\bHer\b/g,"fdgsghjkhgfdsfghjHis")
-.replace(/\bHers\b/g,"fdgsghjkhgfdsfghjHis")
-.replace(/\bhim\b/g,"her")
-.replace(/\bhis(?=\.|\,|\;|\:|\)|\]|\)|\?)/g,"hers")
-.replace(/\bhis\b/g,"her")
-.replace(/\bHim\b/g,"Her")
-.replace(/\bHis(?=\.|\,|\;|\:)/g,"Hers")
-.replace(/\bHis\b/g,"Her")
-.replace(/\bfdgsghjkhgfdsfghjhim\b/g,"him")
-.replace(/\bfdgsghjkhgfdsfghjhis\b/g,"his")
-.replace(/\bfdgsghjkhgfdsfghjHim\b/g,"Him")
-.replace(/\bfdgsghjkhgfdsfghjHis\b/g,"His")
-.replace(/\b([a-z]+[,;:'".]*)\s+Miss(?= [A-Z][a-z])/g, "$1 Mr.");
+        genderswap(treeWalker.currentNode);
     }
 }
-
 
 chrome.extension.sendRequest({checkPaused: "hello"}, function(response) {
     if (response.maybePaused!="yes") {
@@ -800,3 +800,4 @@ chrome.extension.sendRequest({checkPaused: "hello"}, function(response) {
     });
 }
 });
+

@@ -1,0 +1,3 @@
+[submodule "jspos"]
+	path = jspos
+	url = https://github.com/singingfish/jspos.git

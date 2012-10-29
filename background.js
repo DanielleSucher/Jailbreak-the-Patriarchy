@@ -25,3 +25,13 @@ chrome.extension.onRequest.addListener(
   });
 
 updateBadge(localStorage.getItem('paused')=="yes");
+
+var lexer = new Lexer();
+var tagger = new POSTagger();
+chrome.extension.onRequest.addListener(
+    function(request, sender, sendResponse) {
+        var tokens = lexer.lex(request.text);
+        var tagged = tagger.tag(tokens);
+        sendResponse({tagged: tagged});
+  });
+
