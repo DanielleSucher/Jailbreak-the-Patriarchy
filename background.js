@@ -28,6 +28,11 @@ chrome.extension.onRequest.addListener(
 updateBadge(localStorage.getItem('paused')==true);
 
 var map = {
+    // We won't know how to replace "her" until we have part of speech
+    // information from the specific text.  But we add it here as a
+    // key so that regexOfReplacements will be constructed to match
+    // "her" as well.
+    "her" : undefined, 
     "she" : "he",
     "he" : "she",
     "him" : "her",
@@ -288,7 +293,7 @@ function makeRegex(map) {
     for (var word in map) {
         pieces[pieces.length] = "\\b" + RegExp.quote(word) + "\\b";
     }
-    return new RegExp(pieces.join("|"), "i");
+    return new RegExp(pieces.join("|"), "gi");
 }
 
 var regexOfReplacements = makeRegex(map);
@@ -308,34 +313,56 @@ function replace_case_sensitive(word, replacement) {
     } else return replacement; // uncapitalized
 }
 
+// binary search for the value in [indices] which is the greatest
+// value less than [index]
+function find_tag_index(indices, index, start, stop) {
+    start = start ? start : 0;
+    stop = stop ? stop : indices.length;
+    // invariant: indices[start] < index < indices[stop]
+    for (var gap = stop - start; gap > 5; gap = stop - start) {
+        var mid = start + Math.floor(gap / 2);
+        if (indices[mid] === index) {
+            return indices[mid];
+        } else if (indices[mid] < index) {
+            start = mid;
+        } else stop = mid;
+    }
+    while(start <= stop) {
+        if (indices[start] > index) return indices[start - 1];
+        start += 1;
+    }
+    throw new RangeError({
+            start: start,
+            stop: stop,
+            index: index,
+            indices: indices,
+    }.toString());
+}
+
 var lexer = new Lexer();
 var tagger = new POSTagger();
 chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse) {
         if (request.name !== "swapGenders") return;
-        if (!regexOfReplacements.test(request.text)) {
+        var text = request.text;
+        if (!regexOfReplacements.test(text)) {
             sendResponse({value: ""});
             return;
         } else regexOfReplacements.lastIndex = 0;
-        var lexed = lexer.lex(request.text);
+        var lexed = lexer.lex(text);
         var tagged = tagger.tag(lexed.tokens);
-        var replaced = [];
-        var didReplace = false;
-        for (var i = tagged.length - 1; i >= 0; --i) {
-            var word = tagged[i][0]; 
-            var tag = tagged[i][1];
-            var replacement = map[word];
-            if (replacement) {
-                didReplace = true;
-            } else if (word.toLowerCase() === "her") {
-                var replacement = tag === "PP$" ? "his" : "him";
-                replacement = replace_case_sensitive(word, replacement);
-                didReplace = true;
-            } else replacement = word;
-            replaced[i] = replacement;
-        }
-        if (didReplace) {
-            sendResponse({value: replaced.join(" ")});
-        } else sendResponse({value: ""});
+        var replaced = text.replace(
+            regexOfReplacements,
+            function (match, offset, string) {
+                var replacement = map[match];
+                if (!replacement) {
+                    if (match.toLowerCase() === "her") {
+                        var tag = tagged[find_tag_index(lexed.indices, offset)];
+                        replacement = tag === "PP$" ? "his" : "him";
+                    } else replacement = match;
+                }
+                return replacement;
+            });
+        sendResponse({value: replaced});
     });
 
