@@ -30,7 +30,7 @@ updateBadge(localStorage.getItem('paused')==true);
 var map = {
     // We won't know how to replace "her" until we have part of speech
     // information from the specific text.  But we add it here as a
-    // key so that regexOfReplacements will be constructed to match
+    // key so that genderRegex will be constructed to match
     // "her" as well.
     "her" : undefined, 
     "she" : "he",
@@ -297,7 +297,7 @@ function makeRegex(map) {
     return new RegExp(pieces.join("|"), "gi");
 }
 
-var regexOfReplacements = makeRegex(map);
+var genderRegex = makeRegex(map);
 
 // preserves four capitalization styles: uncapitalized, Capitalized,
 // ALLCAPS, and numeric, where uncapitalized and numeric are sort of
@@ -310,70 +310,71 @@ function replace_case_sensitive(word, replacement) {
     } else if (upper === word) { // ALLCAPS
         return replacement.toUpperCase;
     } else if (upper.charAt(0) === word.charAt(0)) { // Capitalized
-        return replacement.charAt(0).toUpperCase() + replacement.substr(1);
+        return replacement.charAt(0).toUpperCase()
+            + replacement.substr(1);
     } else return replacement; // uncapitalized
 }
-
-// binary search for the value in [indices] which is the greatest
-// value less than [index]
-function find_tag_index(indices, index, start, stop) {
-    start = start ? start : 0;
-    stop = stop ? stop : indices.length - 1;
-    // invariant: indices[start] < index < indices[stop]
-    for (var gap = stop - start; gap > 5; gap = stop - start) {
-        var mid = start + Math.floor(gap / 2);
-        if (indices[mid] === index) {
-            return indices[mid];
-        } else if (indices[mid] < index) {
-            start = mid;
-        } else stop = mid;
-    }
-    while(start <= stop) {
-        if (indices[start] == index) return indices[start];
-        if (indices[start] > index) return indices[start - 1];
-        start += 1;
-    }
-    var error = {
-        start: start,
-        stop: stop,
-        index: index,
-        indices: indices,
-    };
-    console.log(error);
-    throw new Error(error);
-}
-
 var lexer = new Lexer();
 var tagger = new POSTagger();
-chrome.extension.onRequest.addListener(
-    function(request, sender, sendResponse) {
-        if (request.name !== "swapGenders") return;
-        var text = request.text;
-        if (!regexOfReplacements.test(text)) {
-            sendResponse({value: ""});
-            return;
-        } else regexOfReplacements.lastIndex = 0;
-        var lexed = lexer.lex(text);
-        var tagged = tagger.tag(lexed.tokens);
-        var replaced = text.replace(
-            regexOfReplacements,
-            function (match, offset, string) {
-                var lowercaseMatch = match.toLowerCase();
-                var fromMap = map[lowercaseMatch];
-                var replacement = "";
-                if (fromMap) {
-                    replacement = replace_case_sensitive(match, fromMap);
-                } else if (lowercaseMatch === "her") {
-                    try {
-                        var tag = tagged[find_tag_index(lexed.indices, offset)];
-                    } catch (error) {
-                        console.log({text:text, lexed:lexed, tagged:tagged, match:match, offset:offset });
-                        throw error;
-                    }
-                    replacement = replace_case_sensitive(match, tag === "PP$" ? "his" : "him");
-                } else replacement = match;
-                return replacement;
-            });
-        sendResponse({value: replaced});
-    });
+chrome.extension.onRequest.addListener(listen);
+function listen (request, sender, sendResponse) {
+    if (request.name !== "swapGenders") return;
+    var text = request.text;
+    if (!genderRegex.test(text)) {
+        sendResponse({value: ""});
+        return;
+    } else genderRegex.lastIndex = 0;
+    var lexed = lexer.lex(text);
+    var tagged = tagger.tag(lexed.tokens);
+    sendResponse({value: text.replace(genderRegex, doReplace)});
+    function doReplace (match, offset, string) {
+        var lowercaseMatch = match.toLowerCase();
+        var fromMap = map[lowercaseMatch];
+        var replacement = "";
+        if (fromMap) {
+            replacement = replace_case_sensitive(match, fromMap);
+        } else if (lowercaseMatch === "her") {
+            var tag = tagged[find_tag_index(lexed.indices, offset)];
+            replacement = replace_case_sensitive(
+                match,
+                tag === "PP$" ? "his" : "him");
+        } else replacement = match;
+        return replacement;
+    };
+
+    // binary search for the value in [indices] which is the greatest
+    // value less than [index]
+    function find_tag_index (indices, index, start, stop) {
+        // first and last indices of [indices] to check
+        start = start ? start : 0;
+        stop = stop ? stop : indices.length - 1;
+        // invariant: indices[start] < index < indices[stop]
+        for (var gap = stop - start; gap > 5; gap = stop - start) {
+            var mid = start + Math.floor(gap / 2);
+            if (indices[mid] === index) {
+                return indices[mid];
+            } else if (indices[mid] < index) {
+                start = mid;
+            } else stop = mid;
+        }
+        while(start <= stop) {
+            if (indices[start] == index) return indices[start];
+            if (indices[start] > index) return indices[start - 1];
+            start += 1;
+        }
+        var error = {
+            start: start,
+            stop: stop,
+            index: index,
+            indices: indices,
+            text:string,
+            lexed:lexed,
+            tagged:tagged,
+            match:match,
+        };
+        console.log(error);
+        throw new Error(error);
+    }
+};
+
 
