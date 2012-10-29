@@ -36,6 +36,7 @@ var map = {
     "she" : "he",
     "he" : "she",
     "him" : "her",
+    "his" : "her",
     "ms" : "mr",
     "mrs" : "mr",
     "mr" : "ms",
@@ -317,7 +318,7 @@ function replace_case_sensitive(word, replacement) {
 // value less than [index]
 function find_tag_index(indices, index, start, stop) {
     start = start ? start : 0;
-    stop = stop ? stop : indices.length;
+    stop = stop ? stop : indices.length - 1;
     // invariant: indices[start] < index < indices[stop]
     for (var gap = stop - start; gap > 5; gap = stop - start) {
         var mid = start + Math.floor(gap / 2);
@@ -328,15 +329,18 @@ function find_tag_index(indices, index, start, stop) {
         } else stop = mid;
     }
     while(start <= stop) {
+        if (indices[start] == index) return indices[start];
         if (indices[start] > index) return indices[start - 1];
         start += 1;
     }
-    throw new RangeError({
-            start: start,
-            stop: stop,
-            index: index,
-            indices: indices,
-    }.toString());
+    var error = {
+        start: start,
+        stop: stop,
+        index: index,
+        indices: indices,
+    };
+    console.log(error);
+    throw new Error(error);
 }
 
 var lexer = new Lexer();
@@ -354,13 +358,20 @@ chrome.extension.onRequest.addListener(
         var replaced = text.replace(
             regexOfReplacements,
             function (match, offset, string) {
-                var replacement = map[match];
-                if (!replacement) {
-                    if (match.toLowerCase() === "her") {
+                var lowercaseMatch = match.toLowerCase();
+                var fromMap = map[lowercaseMatch];
+                var replacement = "";
+                if (fromMap) {
+                    replacement = replace_case_sensitive(match, fromMap);
+                } else if (lowercaseMatch === "her") {
+                    try {
                         var tag = tagged[find_tag_index(lexed.indices, offset)];
-                        replacement = tag === "PP$" ? "his" : "him";
-                    } else replacement = match;
-                }
+                    } catch (error) {
+                        console.log({text:text, lexed:lexed, tagged:tagged, match:match, offset:offset });
+                        throw error;
+                    }
+                    replacement = replace_case_sensitive(match, tag === "PP$" ? "his" : "him");
+                } else replacement = match;
                 return replacement;
             });
         sendResponse({value: replaced});
