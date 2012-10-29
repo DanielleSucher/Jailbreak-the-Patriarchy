@@ -278,6 +278,21 @@ var map = {
     "bloke" : "girl",
 };
 
+
+RegExp.quote = function(str) {
+    return (str + '').replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
+function makeRegex(map) {
+    var pieces = []
+    for (var word in map) {
+        pieces[pieces.length] = "\\b" + RegExp.quote(word) + "\\b";
+    }
+    return new RegExp(pieces.join("|"), "i");
+}
+
+var regexOfReplacements = makeRegex(map);
+
 // preserves four capitalization styles: uncapitalized, Capitalized,
 // ALLCAPS, and numeric, where uncapitalized and numeric are sort of
 // "identity cases"---i.e., the replacement is returned exactly as it
@@ -298,6 +313,10 @@ var tagger = new POSTagger();
 chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse) {
         if (request.name !== "swapGenders") return;
+        if (!regexOfReplacements.test(request.text)) {
+            sendResponse({value: ""});
+            return;
+        } else regexOfReplacements.lastIndex = 0;
         var tokens = lexer.lex(request.text);
         var tagged = tagger.tag(tokens);
         var replaced = [];
