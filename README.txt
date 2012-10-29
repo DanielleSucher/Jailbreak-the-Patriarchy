@@ -2,11 +2,15 @@ Chrome extension to swap gendered pronouns and other terms throughout web browsi
 
 It also adds a "toggle patriarchy" browser action button that reloads the current tab and pauses/unpauses the extension.
 
+It displays progress at the bottom of the window if a page will take nontrivial time to process. 
+
 ***
 
 Known issues:
 
 - Since "her" can be a possessive or objective pronoun, sometimes “her” should translate to “him”, and sometimes it should translate to “his”. Rather than run every node update through some sort of natural language parser, I set up regular expressions with a set of rules that recognize the most common cases where “her” always or usually should translate to “him”, and then one that translates all remaining instances of “her” to “his” instead. What this ultimately means is that sometimes you’re going to see “his” where you really ought to see “him” instead, or vice-versa. If anyone has suggestions on improving this, I'd love to hear them!
+
+*Update*: Now uses singingfish's "jspos" port of the Brill part-of-speech tagger to distinguish between genitive "her" and objective "her."
 
 - It doesn't include words like "mum", "fellow", "mister", &c, that are often used in entirely non-gendered ways (e.g. "mum's the word", "my fellow americans", "perfume mister"). I haven't thought up a good way around that [yet].
 
