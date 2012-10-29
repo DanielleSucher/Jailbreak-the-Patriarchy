@@ -17,7 +17,7 @@ background-color: #aaa; \
     $("body").prepend("<div id='progressbar'></div>");
 }
 ProgressBar.prototype.render = function() {
-    var bar = $("#progressbar");
+    var bar = this.bar;
     bar.empty()
     bar.prepend("Jailbreaking the Patriarchy one DOM node at a time..." + this.done + " / " + this.queued);
     if (!bar.hasClass("visibleProgressBar")) {
@@ -26,27 +26,19 @@ ProgressBar.prototype.render = function() {
 };
 ProgressBar.prototype.start = function () {
     if (this.timeout == null && this.done < this.queued) {
-        console.log({name: "progressbar.start",
-                     done: this.done,
-                     queued: this.queued,
-                    });
-        this.timeout = setTimeout(this.update, 0, this);
+        this.bar = $("#progressbar");
+        this.timeout = setTimeout(this.update, 300, this);
     }
 };
 ProgressBar.prototype.update = function (bar) {
-    console.log({name: "progressbar.update",
-                 done: bar.done,
-                 queued: bar.queued,
-                });
-    bar.render();
-    var f = bar.done < bar.queued ? bar.update : bar.remove;
-    bar.timeout = setTimeout(f, 300, bar);
+    if (bar.done < bar.queued) {
+        bar.render();
+        bar.timeout = setTimeout(bar.update, 100, bar);
+    } else bar.remove(bar);
 };
 ProgressBar.prototype.remove = function (bar) { 
-    $('#progressbar')
-        .removeClass("visibleProgressBar")
+    bar.bar.removeClass("visibleProgressBar")
         .addClass("invisibleProgressBar");
-    console.log({name: "progressbar.remove",});
 };
 
 var progressbar = new ProgressBar();
@@ -62,12 +54,14 @@ function jailbreak(node){
         var node = treeWalker.currentNode;
         var request = {name: "swapGenders", text: node.textContent};
         progressbar.queued += 1;
-        chrome.extension.sendRequest(request, updateNode);
-        function updateNode (response) {
-            if (response.value !== "") {
-                node.textContent = response.value;
-            }
-            progressbar.done += 1; 
+        chrome.extension.sendRequest(request, updateNode(node));
+        function updateNode (node) {
+            return function(response) {
+                if (response.value !== "") {
+                    node.textContent = response.value;
+                }
+                progressbar.done += 1; 
+            };
         }
     }
     progressbar.start();
@@ -77,7 +71,6 @@ chrome.extension.sendRequest({name: "isPaused"}, function(response) {
     if (!response.value) {
         jailbreak(document.body);
         document.body.addEventListener('DOMNodeInserted', function(event) {
-            console.log("DomNodeInserted");
             jailbreak(event.target);
         });
     }
