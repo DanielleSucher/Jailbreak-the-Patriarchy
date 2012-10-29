@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "file://*"],
-      "js": ["myscript.js"],
+      "js": ["jspos/lib/jquery.js", "myscript.js"],
       "run_at" : "document_end"
     }
   ],
