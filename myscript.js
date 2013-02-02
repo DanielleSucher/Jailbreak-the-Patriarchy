@@ -269,7 +269,6 @@ function matchCase(word, orig) {
 
 function swapWord(word) {
   var replacement = map[word.toLowerCase()];
-  console.log('swapping', word, replacement);
   return replacement ? matchCase(replacement, word) : word;
 }
 
