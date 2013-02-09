@@ -1,27 +1,23 @@
-var searchFor = new RegExp(['^she$|^he$|^ms$|^mrs$|^mr$|woman|^man$|women|^men$|^female',
-    '|^male$|^males$|^girl$|^boy$|^girls$|^boys$|^girly$|^boyish$|^girlhood\b',
-    '|^boyhood$|^girlfriend|^boyfriend|^wife|^husband$|^wives$|^husbands$|daughter',
-    '|^son$|^sons$|^sister|^brother|^mother|grandmother|godmother|stepmother|father|^aunt\b',
-    '|^uncle$|^aunts$|^uncles$|^niece$|^nephew$|^nieces$|^nephews$|^herself\b',
-    '|^himself$|^lady|^ladies$|^gentlemen$|^gentleman$|^mom$|^dad$|^moms$|^dads\b',
-    '|mommy|daddy|mommies|daddies|ladiez|^menz$|^manly$|^manliness$|^manhood$|^mankind\b',
-    '|femin|mascul|^guy$|^guys$|^dude$|^dudes$|^dudely$|^maternity$|^paternity\b',
-    '|^maternal$|^paternal$|^matroniz|^patroniz|klansman|airman|airmen|alderman|aldermen|anchorman',
-    '|anchormen|assemblyman|assemblymen|bogeyman|bogeymen|bondsman|bondsmen|businessman|businessmen',
-    '|cameraman|cameramen|caveman|cavemen|chairman|clergyman|congressman|congressmen|councilman|councilmen',
-    '|countryman|countrymen|craftsman|craftsmen|doorman|doormen|fireman|firemen|fisherman|fishermen|foreman',
-    '|foremen|freshman|freshmen|garbageman|garbagemen|handyman|handymen|hangman|henchman|henchmen|journeyman',
-    '|kinsman|kinsmen|layman|laymen|madman|madmen|mailman|mailmen|marksman|middleman|middlemen|milkman|milkmen',
-    '|nobleman|noblemen|ombudsman|policeman|policemen|postman|postmen|repairman|repairmen|salesman|salesmen',
-    '|sandman|serviceman|servicemen|showman|snowman|spaceman|spacemen|spokesman|spokesmen|sportsman|statesman',
-    '|superman|supermen|unman$|watchman|watchmen|weatherman|weathermen|workman|workmen|hero$|heroes|heroine\b',
-    '|heroines|^maleness|whitemaleness|misogyn|misandr|dudebro|laydeez|d00dz|^fem$|^radfem$|^widow$|^widower\b',
-    '|^fiance$|^fiancee$|^papa$|^mama$|^poppa$|^momma$|^god$|^goddess$|^bride|^groom|^godliness\b',
-    '|^godhead$|^godhood$|^godly$|^gal$|^sir$|^ma\'am$|^grandson|^patriar|^matriar',
-    '|stepbrother|stepsister|^lord$|^lords$|^king$|^kings$|^queen$|^queens$|^priest$|^priests\b',
-    '|^priestess$|^priestesses$|^prince$|^princes$|^princess$|^princesses$|^emperor$|^emperors\b',
-    '|^empress$|^empresses$|^girlier$|^girliest$|^dudelier$|^dudeliest$|^actor$|^actors$|^actress\b',
-    '|^actresses|^waiter|^waitress|^grandma$|^grandmas$|^grandpa|^gramps$|^bloke'].join(''), 'i');
+// The first set have to match the complete word, the next has to match only at the start of the word,
+// the next only at the end of the word, and the last can match anywhere in the word
+var searchFor = new RegExp(['^(she|he|ms|mrs|mr|man|men|male|males|girl|boy|girls|boys|girly|boyish|boyhood',
+    '|husband|wives|husbands|son|sons|uncle|aunts|uncles|niece|nephew|nieces|nephews|himself|ladies|gentlemen',
+    '|gentleman|mom|dad|moms|menz|manly|manliness|manhood|guy|guys|dude|dudes|dudely|maternity|maternal|paternal',
+    '|fem|radfem|widow|fiance|fiancee|papa|mama|poppa|momma|god|goddess|godhead|godhood|godly|gal|sir|lord|lords',
+    '|king|kings|queen|queens|priest|priestess|priestesses|prince|princes|princess|princesses|emperor|empress',
+    '|empresses|girlier|girliest|dudelier|dudeliest|actor|actors|grandma|grandmas|gramps|bro|bros|emperors|actress',
+    '|priests|paternity|mankind|aunt|dads|widower|herself|godliness|ma\'am)$|^(female|girlhood|girlfriend|boyfriend',
+    '|wife|sister|brother|mother|lady|matroniz|patroniz|maleness|bride|groom|grandson|patriar|matriar|actresses|waiter',
+    '|waitress|grandpa|bloke)|(heroine|heroines)$|woman|women|daughter|grandmother|godmother|stepmother|father|mommy',
+    '|daddy|mommies|daddies|ladiez|femin|mascul|klansman|airman|airmen|alderman|aldermen|anchorman|anchormen|assemblyman',
+    '|assemblymen|bogeyman|bogeymen|bondsman|bondsmen|businessman|businessmen|cameraman|cameramen|caveman|cavemen|chairman',
+    '|clergyman|congressman|congressmen|councilman|councilmen|countryman|countrymen|craftsman|craftsmen|doorman|doormen',
+    '|fireman|firemen|fisherman|fishermen|foreman|foremen|freshman|freshmen|garbageman|garbagemen|handyman|handymen|hangman',
+    '|henchman|henchmen|journeyman|kinsman|kinsmen|layman|laymen|madman|madmen|mailman|mailmen|marksman|middleman|middlemen',
+    '|milkman|milkmen|nobleman|noblemen|ombudsman|policeman|policemen|postman|postmen|repairman|repairmen|salesman|salesmen',
+    '|sandman|serviceman|servicemen|showman|snowman|spaceman|spacemen|spokesman|spokesmen|sportsman|statesman|superman',
+    '|supermen|unman|watchman|watchmen|weatherman|weathermen|workman|workmen|hero|heroes|whitemaleness|misogyn|misandr',
+    '|dudebro|laydeez|d00dz|stepbrother|stepsister|brogrammer|bromance|mansplain'].join(''), 'i');
 
 var map = {
   "he" : "she",
@@ -270,7 +266,12 @@ var map = {
   "grandmas" : "grandpas",
   "grandpa" : "grandma",
   "gramps" : "grandma",
-  "bloke" : "girl"
+  "bloke" : "girl",
+  "brogrammer" : "sistagrammer",
+  "bro" : "sista",
+  "bros" : "sistas",
+  "bromance" : "sistamance",
+  "mansplain" : "ladysplain"
 }
 
 function capitalize(word) {
