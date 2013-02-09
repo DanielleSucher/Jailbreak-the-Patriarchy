@@ -1,12 +1,12 @@
-var searchFor = RegExp(['\bshe\b|\bhe\b|\bms\b|\bmrs\b|\bmr\b|woman|\bman\b|women|\bmen\b|\bfemale',
-    '|\bmale\b|\bmales\b|\bgirl\b|\bboy\b|\bgirls\b|\bboys\b|\bgirly\b|\bboyish\b|\bgirlhood\b',
-    '|\bboyhood\b|\bgirlfriend|\bboyfriend|\bwife|\bhusband\b|\bwives\b|\bhusbands\b|daughter',
-    '|\bson\b|\bsons\b|\bsister|\bbrother|\bmother|grandmother|godmother|stepmother|father|\baunt\b',
-    '|\buncle\b|\baunts\b|\buncles\b|\bniece\b|\bnephew\b|\bnieces\b|\bnephews\b|\bherself\b',
-    '|\bhimself\b|\blady|\bladies\b|\bgentlemen\b|\bgentleman\b|\bmom\b|\bdad\b|\bmoms\b|\bdads\b',
-    '|mommy|daddy|mommies|daddies|ladiez|\bmenz\b|\bmanly\b|\bmanliness\b|\bmanhood\b|\bmankind\b',
-    '|femin|mascul|\bguy\b|\bguys\b|\bdude\b|\bdudes\b|\bdudely\b|\bmaternity\b|\bpaternity\b',
-    '|\bmaternal\b|\bpaternal\b|\bmatroniz|\bpatroniz|klansman|airman|airmen|alderman|aldermen|anchorman',
+var searchFor = new RegExp(['^she$|^he$|^ms$|^mrs$|^mr$|woman|^man$|women|^men$|^female',
+    '|^male$|^males$|^girl$|^boy$|^girls$|^boys$|^girly$|^boyish$|^girlhood\b',
+    '|^boyhood$|^girlfriend|^boyfriend|^wife|^husband$|^wives$|^husbands$|daughter',
+    '|^son$|^sons$|^sister|^brother|^mother|grandmother|godmother|stepmother|father|^aunt\b',
+    '|^uncle$|^aunts$|^uncles$|^niece$|^nephew$|^nieces$|^nephews$|^herself\b',
+    '|^himself$|^lady|^ladies$|^gentlemen$|^gentleman$|^mom$|^dad$|^moms$|^dads\b',
+    '|mommy|daddy|mommies|daddies|ladiez|^menz$|^manly$|^manliness$|^manhood$|^mankind\b',
+    '|femin|mascul|^guy$|^guys$|^dude$|^dudes$|^dudely$|^maternity$|^paternity\b',
+    '|^maternal$|^paternal$|^matroniz|^patroniz|klansman|airman|airmen|alderman|aldermen|anchorman',
     '|anchormen|assemblyman|assemblymen|bogeyman|bogeymen|bondsman|bondsmen|businessman|businessmen',
     '|cameraman|cameramen|caveman|cavemen|chairman|clergyman|congressman|congressmen|councilman|councilmen',
     '|countryman|countrymen|craftsman|craftsmen|doorman|doormen|fireman|firemen|fisherman|fishermen|foreman',
@@ -14,18 +14,18 @@ var searchFor = RegExp(['\bshe\b|\bhe\b|\bms\b|\bmrs\b|\bmr\b|woman|\bman\b|wome
     '|kinsman|kinsmen|layman|laymen|madman|madmen|mailman|mailmen|marksman|middleman|middlemen|milkman|milkmen',
     '|nobleman|noblemen|ombudsman|policeman|policemen|postman|postmen|repairman|repairmen|salesman|salesmen',
     '|sandman|serviceman|servicemen|showman|snowman|spaceman|spacemen|spokesman|spokesmen|sportsman|statesman',
-    '|superman|supermen|unman\b|watchman|watchmen|weatherman|weathermen|workman|workmen|hero\b|heroes|heroine\b',
-    '|heroines|\bmaleness|whitemaleness|misogyn|misandr|dudebro|laydeez|d00dz|\bfem\b|\bradfem\b|\bwidow\b|\bwidower\b',
-    '|\bfiance\b|\bfiancee\b|\bpapa\b|\bmama\b|\bpoppa\b|\bmomma\b|\bgod\b|\bgoddess\b|\bbride|\bgroom|\bgodliness\b',
-    '|\bgodhead\b|\bgodhood\b|\bgodly\b|\bgal\b|\bsir\b|\bma\'am\b|\bgrandson|\bpatriar|\bmatriar',
-    '|stepbrother|stepsister|\blord\b|\blords\b|\bking\b|\bkings\b|\bqueen\b|\bqueens\b|\bpriest\b|\bpriests\b',
-    '|\bpriestess\b|\bpriestesses\b|\bprince\b|\bprinces\b|\bprincess\b|\bprincesses\b|\bemperor\b|\bemperors\b',
-    '|\bempress\b|\bempresses\b|\bgirlier\b|\bgirliest\b|\bdudelier\b|\bdudeliest\b|\bactor\b|\bactors\b|\bactress\b',
-    '|\bactresses|\bwaiter|\bwaitress|\bgrandma\b|\bgrandmas\b|\bgrandpa|\bgramps\b|\bbloke/gi'].join(''));
+    '|superman|supermen|unman$|watchman|watchmen|weatherman|weathermen|workman|workmen|hero$|heroes|heroine\b',
+    '|heroines|^maleness|whitemaleness|misogyn|misandr|dudebro|laydeez|d00dz|^fem$|^radfem$|^widow$|^widower\b',
+    '|^fiance$|^fiancee$|^papa$|^mama$|^poppa$|^momma$|^god$|^goddess$|^bride|^groom|^godliness\b',
+    '|^godhead$|^godhood$|^godly$|^gal$|^sir$|^ma\'am$|^grandson|^patriar|^matriar',
+    '|stepbrother|stepsister|^lord$|^lords$|^king$|^kings$|^queen$|^queens$|^priest$|^priests\b',
+    '|^priestess$|^priestesses$|^prince$|^princes$|^princess$|^princesses$|^emperor$|^emperors\b',
+    '|^empress$|^empresses$|^girlier$|^girliest$|^dudelier$|^dudeliest$|^actor$|^actors$|^actress\b',
+    '|^actresses|^waiter|^waitress|^grandma$|^grandmas$|^grandpa|^gramps$|^bloke'].join(''), 'i');
 
 var map = {
-  "she" : "he",
   "he" : "she",
+  "she" : "he",
   "ms" : "mr",
   "mrs" : "mr",
   "mr" : "ms",
@@ -280,10 +280,9 @@ function capitalize(word) {
   return first.toUpperCase() + rest.toLowerCase();
 }
 
-function matchCase(replacement, old_word) {
-  if (replacement == old_word.toLowerCase()) {
-    return old_word;
-  }
+function matchCase(old_word, replacement) {
+  if (replacement.toLowerCase() == old_word.toLowerCase()) return old_word;
+
   var first = old_word.charAt(0);
   var second = old_word.charAt(1);
 
@@ -293,16 +292,17 @@ function matchCase(replacement, old_word) {
   return capitalize(replacement);
 }
 
+function findMatch(word) {
+  return map[word];
+}
+
 function swapWord(word) {
-  var replacement = word.toLowerCase().replace(searchFor, function(match) {
-    return map[match];
-  });
-  return matchCase(replacement, word);
+  return matchCase(word, word.replace(searchFor, findMatch));
 }
 
 function genderswap(text) {
   return text
-    .replace(/[a-z][\w']*/gi, swapWord)
+    .replace(/\b([a-z][\w']+)\b/gi, swapWord)
     .replace(/(\S+\s+)?\b(hers?|hi[ms])\b(\s+\S+)?/gim, function($0) {
       return (/hers?/.test($0) ? translateHer : translateHim)($0);
     });
