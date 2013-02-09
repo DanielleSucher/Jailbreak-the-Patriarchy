@@ -351,8 +351,8 @@ function jailbreak(node){
   }
 }
 
-chrome.extension.sendRequest({checkPaused: "hello"}, function(response) {
-  if (response.maybePaused!="yes") {
+chrome.extension.sendRequest({name: "isPaused?"}, function(response) {
+  if (response.value != 'true') {
     jailbreak(document.body);
 
     document.body.addEventListener('DOMNodeInserted', function(event) {
