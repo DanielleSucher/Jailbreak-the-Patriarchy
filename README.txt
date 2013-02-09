@@ -1,6 +1,8 @@
-Chrome extension to swap gendered pronouns and other terms throughout web browsing. 
+Chrome extension to swap gendered pronouns and other terms throughout web browsing.
 
 It also adds a "toggle patriarchy" browser action button that reloads the current tab and pauses/unpauses the extension.
+
+Thanks to rictic for adding in the option of setting Jailbreak to randomly turn on and off each day! This option is off by default, but can be turned on by going into chrome://extensions/ and hitting the Options link under Jailbreak the Patriarchy.
 
 ***
 
@@ -14,7 +16,7 @@ Known issues:
 
 - Ported by others to Safari (http://code.lardcave.net/entries/2011/12/22/182251/) and Firefox (http://userscripts.org/scripts/show/125685) and as gender-neutral version (https://chrome.google.com/webstore/detail/mmdlclbfhplmbjfefngjbicmelpbbdnh) already, hooray!
 
-- If anyone else wants to create anything else that plays off this, please feel free. I'd appreciate a nod of credit, but that's about it. 
+- If anyone else wants to create anything else that plays off this, please feel free. I'd appreciate a nod of credit, but that's about it.
 
 ***
 
