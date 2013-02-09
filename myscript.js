@@ -297,7 +297,7 @@ function findMatch(word) {
 }
 
 function swapWord(word) {
-  return matchCase(word, word.replace(searchFor, findMatch));
+  return matchCase(word, word.toLowerCase().replace(searchFor, findMatch));
 }
 
 function genderswap(text) {
