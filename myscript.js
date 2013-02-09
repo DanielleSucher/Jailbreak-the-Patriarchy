@@ -281,6 +281,9 @@ function capitalize(word) {
 }
 
 function matchCase(replacement, old_word) {
+  if (replacement == old_word.toLowerCase()) {
+    return old_word;
+  }
   var first = old_word.charAt(0);
   var second = old_word.charAt(1);
 
@@ -294,7 +297,7 @@ function swapWord(word) {
   var replacement = word.toLowerCase().replace(searchFor, function(match) {
     return map[match];
   });
-  return replacement ? matchCase(replacement, word) : word;
+  return matchCase(replacement, word);
 }
 
 function genderswap(text) {
