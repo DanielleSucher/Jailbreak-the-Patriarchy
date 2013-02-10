@@ -307,7 +307,7 @@ function swapWord(word) {
 function genderswap(text) {
   return text
     .replace(/\b([a-z][\w']+)\b/gi, swapWord)
-    .replace(/\b(hers?|hi[ms])[\.\,\;\:\]\}\)\?\n\r\t]?(\s+\S+)?/gim, function(match) {
+    .replace(/\b(hers?|hi[ms])\b[\.\,\;\:\]\}\)\?]?(\s+\S+)?/gim, function(match) {
       if (/hers?/i.test(match)) {
         return translateHer(match);
       } else {
