@@ -17,7 +17,7 @@ var searchFor = new RegExp(['^(she|he|ms|mrs|mr|man|men|male|males|girl|boy|girl
     '|milkman|milkmen|nobleman|noblemen|ombudsman|policeman|policemen|postman|postmen|repairman|repairmen|salesman|salesmen',
     '|sandman|serviceman|servicemen|showman|snowman|spaceman|spacemen|spokesman|spokesmen|sportsman|statesman|superman',
     '|supermen|unman|watchman|watchmen|weatherman|weathermen|workman|workmen|hero|heroes|whitemaleness|misogyn|misandr',
-    '|dudebro|laydeez|d00dz|stepbrother|stepsister|brogrammer|bromance|mansplain'].join(''), 'i');
+    '|dudebro|laydeez|d00dz|stepbrother|stepsister|brogrammer|bromance|mansplain|sorostitute'].join(''), 'i');
 
 var map = {
   "he" : "she",
@@ -267,11 +267,12 @@ var map = {
   "grandpa" : "grandma",
   "gramps" : "grandma",
   "bloke" : "girl",
+  "bro" : "sis",
+  "bros" : "chicks",
   "brogrammer" : "sistagrammer",
-  "bro" : "sista",
-  "bros" : "sistas",
-  "bromance" : "sistamance",
-  "mansplain" : "ladysplain"
+  "bromance" : "lady-romance",
+  "mansplain" : "ladysplain",
+  "sorostitute" : "bro-whore"
 }
 
 function capitalize(word) {
