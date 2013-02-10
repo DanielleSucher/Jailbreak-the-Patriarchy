@@ -305,39 +305,47 @@ function swapWord(word) {
 }
 
 function genderswap(text) {
-  var initial_swap = text.replace(/\b([a-z][\w']+)\b/gi, swapWord);
-  return translateHimHer(initial_swap);
+  return text
+    .replace(/\b([a-z][\w']+)\b/gi, swapWord)
+    .replace(/\b(hers?|hi[ms])[\.\,\;\:\]\}\)\?\n\r\t]?(\s+\S+)?/gim, function(match) {
+      if (/hers?/i.test(match)) {
+        return translateHer(match);
+      } else {
+        return translateHim(match);
+      }
+    })
+    .replace(/\b([a-z]+[,;:'".]*)\s+Miss(?= [A-Z][a-z])/g, "$1 Mr.");
 }
 
-function translateHimHer(text) {
+function translateHim(text) {
   return text
-    .replace(/\bher\b(?=\.|\,|\;|\:|\]|\}|\)|\?)/g,"fdgsghjkhgfdsfghjhim")
-    .replace(/\bher\sher\b/g,"fdgsghjkhgfdsfghjhim fdgsghjkhgfdsfghjhis")
-    .replace(/\bher\b(?=\s(?=a\b|an\b|the\b|some\b|any\b|0|1|2|3|4|5|6|7|8|9|one|two|three|thirt|four|five|fift|six|seven|eight|nine|ten|eleven|twelve|twenty))/g, "fdgsghjkhgfdsfghjhim")
-    .replace(/\bher\b(?=\s(?=aboard|about|above|across|after|against|along|amid|among|around|as|at|before|behind|below|beneath|beside|besides|between|beyond|but\b|by\b|concerning|considering|despite|down|during|except|excepting|excluding|following|for|from|in\b|inside|into|like|minus|of\b|off\b|often|on\b|onto|opposite|outside|over|past|per\b|plus|regarding|since\b|than\b|through|to\b|toward|towards|under\b|underneath|unlike|until|up\b|upon|versus|via\b|with\b|within|without|not|and\b|feel\b))/g,"fdgsghjkhgfdsfghjhim")
-    .replace(/\bit\sher\sall\b/g,"it fdgsghjkhgfdsfghjhis all")
-    .replace(/\bher\sall\b/g,"fdgsghjkhgfdsfghjhim all")
-    .replace(/\bher\b/g,"fdgsghjkhgfdsfghjhis")
-    .replace(/\bhers\b/g,"fdgsghjkhgfdsfghjhis")
-    .replace(/\bHer\b(?=\.|\,|\;|\:|\]|\}|\)|\?)/g,"fdgsghjkhgfdsfghjHim")
-    .replace(/\bHer\sher\b/g,"fdgsghjkhgfdsfghjHim fdgsghjkhgfdsfghjHis")
-    .replace(/\bHer\b(?=\s(?=a\b|an\b|the\b|some\b|any\b|many\b|0|1|2|3|4|5|6|7|8|9|one|two|three|thirt|four|five|fift|six|seven|eight|nine|ten|eleven|twelve|twenty))/g, "fdgsghjkhgfdsfghjHim")
-    .replace(/\bHer\b(?=\s(?=aboard|about|above|across|after|against|along|amid|among|around|as|at|before|behind|below|beneath|beside|besides|between|beyond|but\b|by\b|concerning|considering|despite|down|during|except|excepting|excluding|following|for|from|in\b|inside|into|like|minus|of\b|off\b|often|on\b|onto|opposite|outside|over|past|per\b|plus|regarding|since\b|than\b|through|to\b|toward|towards|under\b|underneath|unlike|until|up\b|upon|versus|via\b|with\b|within|without|not|and\b|feel\b))/g,"fdgsghjkhgfdsfghjHim")
-    .replace(/\bit\sHer\sall\b/g,"it fdgsghjkhgfdsfghjHis all")
-    .replace(/\bHer\sall\b/g,"fdgsghjkhgfdsfghjHim all")
-    .replace(/\bHer\b/g,"fdgsghjkhgfdsfghjHis")
-    .replace(/\bHers\b/g,"fdgsghjkhgfdsfghjHis")
     .replace(/\bhim\b/g,"her")
-    .replace(/\bhis(?=\.|\,|\;|\:|\)|\]|\)|\?)/g,"hers")
+    .replace(/\bhis(?=[\.\,\;\:\]\}\)\?])/g,"hers")
     .replace(/\bhis\b/g,"her")
     .replace(/\bHim\b/g,"Her")
-    .replace(/\bHis(?=\.|\,|\;|\:)/g,"Hers")
+    .replace(/\bHis(?=[\.\,\;\:])/g,"Hers")
     .replace(/\bHis\b/g,"Her")
-    .replace(/\bfdgsghjkhgfdsfghjhim\b/g,"him")
-    .replace(/\bfdgsghjkhgfdsfghjhis\b/g,"his")
-    .replace(/\bfdgsghjkhgfdsfghjHim\b/g,"Him")
-    .replace(/\bfdgsghjkhgfdsfghjHis\b/g,"His")
-    .replace(/\b([a-z]+[,;:'".]*)\s+Miss(?= [A-Z][a-z])/g, "$1 Mr.");
+  ;
+}
+
+function translateHer(text) {
+  return text
+    .replace(/\bher\b(?=[\.\,\;\:\]\}\)\?])/g, 'him')
+    .replace(/\bher\sher\b/g, "him his")
+    .replace(/\bher\b(?=\s(?=a\b|an\b|the\b|some\b|any\b|0|1|2|3|4|5|6|7|8|9|one|two|three|thirt|four|five|fift|six|seven|eight|nine|ten|eleven|twelve|twenty))/g, "him")
+    .replace(/\bher\b(?=\s(?=aboard|about|above|across|after|against|along|amid|among|around|as|at|before|behind|below|beneath|beside|besides|between|beyond|but\b|by\b|concerning|considering|despite|down|during|except|excepting|excluding|following|for|from|in\b|inside|into|like|minus|of\b|off\b|often|on\b|onto|opposite|outside|over|past|per\b|plus|regarding|since\b|than\b|through|to\b|toward|towards|under\b|underneath|unlike|until|up\b|upon|versus|via\b|with\b|within|without|not|and\b|feel\b))/g,"him")
+    .replace(/\bit\sher\sall\b/g,"it his all")
+    .replace(/\bher\sall\b/g,"him all")
+    .replace(/\bher\b/g,"his")
+    .replace(/\bhers\b/g,"his")
+    .replace(/\bHer\b(?=[\.\,\;\:\]\}\)\?])/g,"Him")
+    .replace(/\bHer\sher\b/g,"Him His")
+    .replace(/\bHer\b(?=\s(?=a\b|an\b|the\b|some\b|any\b|many\b|0|1|2|3|4|5|6|7|8|9|one|two|three|thirt|four|five|fift|six|seven|eight|nine|ten|eleven|twelve|twenty))/g, "Him")
+    .replace(/\bHer\b(?=\s(?=aboard|about|above|across|after|against|along|amid|among|around|as|at|before|behind|below|beneath|beside|besides|between|beyond|but\b|by\b|concerning|considering|despite|down|during|except|excepting|excluding|following|for|from|in\b|inside|into|like|minus|of\b|off\b|often|on\b|onto|opposite|outside|over|past|per\b|plus|regarding|since\b|than\b|through|to\b|toward|towards|under\b|underneath|unlike|until|up\b|upon|versus|via\b|with\b|within|without|not|and\b|feel\b))/g,"Him")
+    .replace(/\bit\sHer\sall\b/g,"it His all")
+    .replace(/\bHer\sall\b/g,"Him all")
+    .replace(/\bHer\b/g,"His")
+    .replace(/\bHers\b/g,"His");
 }
 
 function jailbreak(node){
