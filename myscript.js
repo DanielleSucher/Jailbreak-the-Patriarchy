@@ -6,18 +6,22 @@ var searchFor = new RegExp(['^(she|he|ms|mrs|mr|man|men|male|males|girl|boy|girl
     '|fem|radfem|widow|fiance|fiancee|papa|mama|poppa|momma|god|goddess|godhead|godhood|godly|gal|sir|lord|lords',
     '|king|kings|queen|queens|priest|priestess|priestesses|prince|princes|princess|princesses|emperor|empress',
     '|empresses|girlier|girliest|dudelier|dudeliest|actor|actors|grandma|grandmas|gramps|bro|bros|emperors|actress',
-    '|priests|paternity|mankind|aunt|dads|widower|herself|godliness)$|^(she\'|he\'|ma\'am|female|girlhood|girlfriend|boyfriend',
+    '|priests|paternity|mankind|aunt|dads|widower|herself|godliness)$',
+
+    '|^(she\'|he\'|ma\'am|female|girlhood|girlfriend|boyfriend',
     '|wife|sister|brother|mother|lady|matroniz|patroniz|maleness|bride|groom|grandson|patriar|matriar|actresses|waiter',
-    '|waitress|grandpa|bloke)|(heroine|heroines)$|woman|women|daughter|grandmother|godmother|stepmother|father|mommy',
+    '|waitress|grandpa|bloke)',
+
+    '|(heroine|heroines)$|woman|women|daughter|grandmother|godmother|stepmother|father|mommy',
     '|daddy|mommies|daddies|ladiez|femin|mascul|klansman|airman|airmen|alderman|aldermen|anchorman|anchormen|assemblyman',
-    '|assemblymen|bogeyman|bogeymen|bondsman|bondsmen|businessman|businessmen|cameraman|cameramen|caveman|cavemen|chairman',
+    '|assemblymen|bogeyman|bogeymen|bondsman|bondsmen|businessman|businessmen|cameraman|cameramen|caveman|cavemen|chairman|chairmen',
     '|clergyman|congressman|congressmen|councilman|councilmen|countryman|countrymen|craftsman|craftsmen|doorman|doormen',
     '|fireman|firemen|fisherman|fishermen|foreman|foremen|freshman|freshmen|garbageman|garbagemen|handyman|handymen|hangman',
     '|henchman|henchmen|journeyman|kinsman|kinsmen|layman|laymen|madman|madmen|mailman|mailmen|marksman|middleman|middlemen',
     '|milkman|milkmen|nobleman|noblemen|ombudsman|policeman|policemen|postman|postmen|repairman|repairmen|salesman|salesmen',
     '|sandman|serviceman|servicemen|showman|snowman|spaceman|spacemen|spokesman|spokesmen|sportsman|statesman|superman',
     '|supermen|unman|watchman|watchmen|weatherman|weathermen|workman|workmen|hero|heroes|whitemaleness|misogyn|misandr',
-    '|dudebro|laydeez|d00dz|stepbrother|stepsister|brogrammer|bromance|mansplain|sorostitute'].join(''), 'i');
+    '|dudebro|laydeez|d00dz|stepbrother|stepsister|brogrammer|bromance|mansplain|sorostitute|clergymen|hangmen|journeymen|marksmen|ombudsmen|sandmen|showmen|sportsmen|statesmen'].join(''), 'i');
 
 var map = {
   "he" : "she",
@@ -181,6 +185,7 @@ var map = {
   "serviceman" : "servicewoman",
   "servicemen" : "servicewomen",
   "showman" : "showwoman",
+  "snowman" : "snowwoman",
   "showmen" : "showwomen",
   "spaceman" : "spacewoman",
   "spacemen" : "spacewomen",
@@ -352,7 +357,7 @@ function jailbreak(node){
   var treeWalker = document.createTreeWalker(
       node,
       NodeFilter.SHOW_TEXT,
-      { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
+      null,
       false
   );
   while(treeWalker.nextNode()) {
