@@ -53,6 +53,7 @@ var complete = {
   ladies: 'gentlemen',
   lord: 'lady',
   lords: 'ladies',
+  maiden: 'stableboy',
   male: 'female',
   males: 'females',
   mama: 'papa',
