@@ -161,7 +161,8 @@ var start =  {
   patriar: 'matriar',
   patroniz: 'matroniz',
   sister: 'brother',
-  squire: 'damsel'female: 'male',
+  squire: 'damsel',
+  female: 'male',
   waiter: 'waitress',
   waitress: 'waiter',
   wife: 'husband'
