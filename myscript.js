@@ -143,6 +143,7 @@ var start =  {
   comtesse: 'comte',
   dame: 'knight',
   damsel: 'squire',
+  female: 'male',
   girlfriend: 'boyfriend',
   girlhood: 'boyhood',
   grandpa: 'grandma',
@@ -162,7 +163,6 @@ var start =  {
   patroniz: 'matroniz',
   sister: 'brother',
   squire: 'damsel',
-  female: 'male',
   waiter: 'waitress',
   waitress: 'waiter',
   wife: 'husband'
