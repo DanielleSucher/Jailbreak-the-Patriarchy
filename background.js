@@ -1,4 +1,4 @@
-function updateBadge(paused){
+function updateBadge(paused) {
     if (paused){
         chrome.browserAction.setBadgeText({text:"OFF"});
     } else {
@@ -6,15 +6,18 @@ function updateBadge(paused){
     }
 }
 
+function togglePaused(paused) {
+  localStorage.setItem('paused', paused);
+  updateBadge(paused);
+}
+
 chrome.browserAction.onClicked.addListener(
     function(tab){
         localStorage.setItem("lastChangedAt", now());
         if (localStorage.getItem('paused') == 'true'){
-           localStorage.setItem('paused', false);
-           updateBadge(false);
+           togglePaused(false);
         } else {
-           localStorage.setItem('paused', true);
-           updateBadge(true);
+           togglePaused(true);
         }
         chrome.tabs.update(tab.id, {url: tab.url});
 });
@@ -29,6 +32,11 @@ chrome.extension.onRequest.addListener(
             handleNewOptions(JSON.parse(request.options));
         }
 });
+
+chrome.runtime.onInstalled.addListener(function() {
+     togglePaused(true);
+});
+
 
 var ONE_DAY = 1000 * 60 * 60 * 24;
 //returns the current time in millis since epoch
@@ -45,8 +53,7 @@ function checkForRandomSwap() {
     if (isNaN(lastChangedAt) || lastChangedAt + ONE_DAY < now()) {
         lastChangedAt = now();
         var paused = Math.random() > 0.5;
-        updateBadge(paused);
-        localStorage.setItem('paused', paused);
+        togglePaused(paused);
         localStorage.setItem("lastChangedAt", lastChangedAt);
     }
     if (!alreadyQueued) {
