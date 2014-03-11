@@ -1,42 +1,33 @@
 function updateBadge(paused) {
-    if (paused){
-        chrome.browserAction.setBadgeText({text:"OFF"});
-    } else {
-        chrome.browserAction.setBadgeText({text:""});
-    }
+  badge_text = paused ? "OFF" : "";
+  chrome.browserAction.setBadgeText({text: badge_text});
 }
 
-function togglePaused(paused) {
+function setPaused(paused) {
   localStorage.setItem('paused', paused);
   updateBadge(paused);
 }
 
-chrome.browserAction.onClicked.addListener(
-    function(tab){
-        localStorage.setItem("lastChangedAt", now());
-        if (localStorage.getItem('paused') == 'true'){
-           togglePaused(false);
-        } else {
-           togglePaused(true);
-        }
-        chrome.tabs.update(tab.id, {url: tab.url});
+chrome.browserAction.onClicked.addListener(function(tab){
+  localStorage.setItem("lastChangedAt", now());
+  state = localStorage.getItem('paused') == 'true'
+  setPaused(!state);
+  chrome.tabs.update(tab.id, {url: tab.url});
 });
 
-chrome.extension.onRequest.addListener(
-    function(request, sender, sendResponse) {
-        if (request.name == "isPaused?")
-            sendResponse({value: localStorage.getItem('paused')});
-        else if (request.name == "setOptions") {
-            localStorage.setItem('options', request.options);
-            checkForRandomSwap();
-            handleNewOptions(JSON.parse(request.options));
-        }
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+  if (request.name == "isPaused?")
+    sendResponse({value: localStorage.getItem('paused')});
+  else if (request.name == "setOptions") {
+    localStorage.setItem('options', request.options);
+    checkForRandomSwap();
+    handleNewOptions(JSON.parse(request.options));
+  }
 });
 
 chrome.runtime.onInstalled.addListener(function() {
-     togglePaused(true);
+  setPaused(true);
 });
-
 
 var ONE_DAY = 1000 * 60 * 60 * 24;
 //returns the current time in millis since epoch
