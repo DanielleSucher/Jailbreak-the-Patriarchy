@@ -37,24 +37,25 @@ function now() {
 
 var alreadyQueued = false;
 function checkForRandomSwap() {
-    var options = JSON.parse(localStorage.getItem('options'));
-    if (!options.checkDaily) return;
-    var lastChangedAt = parseInt(localStorage.getItem("lastChangedAt"), 10);
-    //if we've never changed it, or if it's been over a day since it was changed
-    if (isNaN(lastChangedAt) || lastChangedAt + ONE_DAY < now()) {
-        lastChangedAt = now();
-        var paused = Math.random() > 0.5;
-        togglePaused(paused);
-        localStorage.setItem("lastChangedAt", lastChangedAt);
-    }
-    if (!alreadyQueued) {
-        var time_until_next_check = (lastChangedAt + ONE_DAY) - now();
-        alreadyQueued = true;
-        setTimeout(function() {
-            alreadyQueued = false;
-            checkForRandomSwap();
-        }, time_until_next_check);
-    }
+  var options = JSON.parse(localStorage.getItem('options'));
+  if (!options.checkDaily) return;
+
+  var lastChangedAt = parseInt(localStorage.getItem("lastChangedAt"), 10);
+  //if we've never changed it, or if it's been over a day since it was changed
+  if (isNaN(lastChangedAt) || lastChangedAt + ONE_DAY < now()) {
+    lastChangedAt = now();
+    var paused = Math.random() > 0.5;
+    setPaused(paused);
+    localStorage.setItem("lastChangedAt", lastChangedAt);
+  }
+  if (!alreadyQueued) {
+    var time_until_next_check = (lastChangedAt + ONE_DAY) - now();
+    alreadyQueued = true;
+    setTimeout(function() {
+      alreadyQueued = false;
+      checkForRandomSwap();
+    }, time_until_next_check);
+  }
 }
 
 updateBadge(localStorage.getItem('paused') == true);
