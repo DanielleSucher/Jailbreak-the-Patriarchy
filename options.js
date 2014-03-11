@@ -6,5 +6,5 @@ function setOptions() {
     var options = {
         checkDaily: document.getElementById("checkDaily").checked
     };
-    chrome.extension.sendRequest({name: "setOptions", options: JSON.stringify(options)});
+    chrome.runtime.sendMessage({name: "setOptions", options: JSON.stringify(options)});
 }

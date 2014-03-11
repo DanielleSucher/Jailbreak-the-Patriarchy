@@ -15,13 +15,13 @@ chrome.browserAction.onClicked.addListener(function(tab){
   chrome.tabs.update(tab.id, {url: tab.url});
 });
 
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-  if (request.name == "isPaused?")
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.name == "isPaused?")
     sendResponse({value: localStorage.getItem('paused')});
-  else if (request.name == "setOptions") {
-    localStorage.setItem('options', request.options);
+  else if (message.name == "setOptions") {
+    localStorage.setItem('options', message.options);
     checkForRandomSwap();
-    handleNewOptions(JSON.parse(request.options));
+    handleNewOptions(JSON.parse(message.options));
   }
 });
 

@@ -406,7 +406,7 @@ function jailbreak(node){
   }
 }
 
-chrome.extension.sendRequest({name: "isPaused?"}, function(response) {
+chrome.runtime.sendMessage({name: "isPaused?"}, function(response) {
   if (response.value != 'true') {
     jailbreak(document.body);
 
