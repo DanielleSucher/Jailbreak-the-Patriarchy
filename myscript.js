@@ -91,6 +91,7 @@ var complete = {
   maternity: 'paternity',
   men: 'women',
   menz: 'ladiez',
+  mgtow: 'wgtow',
   mom: 'dad',
   momma: 'poppa',
   moms: 'dads',
